@@ -229,7 +229,28 @@ logread | grep -E "(ha-cluster|keepalived|owsync|lease-sync)"
 
 ## Development
 
-### Setting Up the Build Environment
+### Building with Docker (quickest)
+
+If you just want ready-to-install packages without setting up a build host, a
+containerised build environment based on the official OpenWrt SDK is provided
+in [`docker/`](docker/README.md):
+
+```bash
+# Build the image and compile all packages for x86-64
+docker build -t ha-feed-build docker/
+docker run --rm -v "$PWD/output:/output" ha-feed-build
+
+# For another architecture, e.g. MediaTek Filogic (aarch64)
+docker build -t ha-feed-build-filogic \
+  --build-arg OPENWRT_TARGET=mediatek/filogic docker/
+docker run --rm -v "$PWD/output:/output" ha-feed-build-filogic
+```
+
+The `.apk` files land in `./output/<arch>/ha_feed/`. See
+[`docker/README.md`](docker/README.md) for targets, index signing, and building
+from a local checkout.
+
+### Setting Up the Build Environment (full buildroot)
 
 A setup script is provided to clone and configure an OpenWrt buildroot for compiling the feed packages:
 
