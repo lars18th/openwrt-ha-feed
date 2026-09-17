@@ -240,15 +240,20 @@ in [`docker/`](docker/README.md):
 docker build -t ha-feed-build docker/
 docker run --rm -v "$PWD/output:/output" ha-feed-build
 
-# For another architecture, e.g. MediaTek Filogic (aarch64)
+# For another architecture and/or OpenWrt release, e.g. MediaTek Filogic
+# (aarch64) on 24.10.8. Use the bare version number, without a "v" prefix.
 docker build -t ha-feed-build-filogic \
-  --build-arg OPENWRT_TARGET=mediatek/filogic docker/
+  --build-arg OPENWRT_TARGET=mediatek/filogic \
+  --build-arg OPENWRT_VERSION=24.10.8 \
+  docker/
 docker run --rm -v "$PWD/output:/output" ha-feed-build-filogic
 ```
 
-The `.apk` files land in `./output/<arch>/ha_feed/`. See
-[`docker/README.md`](docker/README.md) for targets, index signing, and building
-from a local checkout.
+The `.apk` files land in `./output/<arch>/ha_feed/`. The default is x86-64 on
+OpenWrt 25.12.0; the matching SDK for any release/target is resolved and
+checksum-verified automatically. See [`docker/README.md`](docker/README.md) for
+version and target selection, index signing, and building from a local
+checkout.
 
 ### Setting Up the Build Environment (full buildroot)
 

@@ -52,9 +52,28 @@ docker build -t ha-feed-build-filogic \
 docker run --rm -v "$PWD/output:/output" ha-feed-build-filogic
 ```
 
-To match a different OpenWrt release, also pass `--build-arg
-OPENWRT_VERSION=<version>` (and `OPENWRT_GCC` if the toolchain suffix changed —
-check the SDK filename in the download tree).
+## Choosing an OpenWrt version
+
+The image is built for release `25.12.0` by default. Pass `--build-arg
+OPENWRT_VERSION=<version>` to target another release — use the bare version
+number (as it appears under
+[`releases/`](https://downloads.openwrt.org/releases/)), **without** a `v`
+prefix:
+
+```bash
+# Filogic packages for OpenWrt 24.10.8
+docker build -t ha-feed-build-filogic-2410 \
+  --build-arg OPENWRT_VERSION=24.10.8 \
+  --build-arg OPENWRT_TARGET=mediatek/filogic \
+  docker/
+docker run --rm -v "$PWD/output:/output" ha-feed-build-filogic-2410
+```
+
+The exact SDK (including its toolchain version, which differs between releases)
+is discovered automatically from the target's `sha256sums` index and verified
+against its published checksum, so any valid `OPENWRT_VERSION` ×
+`OPENWRT_TARGET` combination resolves without extra flags. Only stable
+`releases/` are supported (not `snapshots/`).
 
 ## Building a subset of packages
 
