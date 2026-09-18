@@ -53,13 +53,14 @@ for pkg in "${PACKAGES[@]}"; do
     ./scripts/feeds install "$pkg"
 done
 
-echo "[3/4] Compiling packages..."
+echo "[3/4] Configuring and compiling packages in parallel..."
+for pkg in "${PACKAGES[@]}"; do
+    echo "CONFIG_PACKAGE_$pkg=m" >> .config
+done
 # A default .config is required for per-package compile in the SDK.
 make defconfig
-for pkg in "${PACKAGES[@]}"; do
-    echo "  --> package/$pkg"
-    make "package/$pkg/compile" -j"$JOBS" $V_FLAG
-done
+# Compile all in parallel
+make "package/compile" -j"$JOBS" $V_FLAG
 
 echo "[4/4] Collecting artifacts..."
 # OpenWrt >= 24.10 emits .apk; older releases emit .ipk. Handle both.
