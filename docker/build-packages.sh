@@ -57,7 +57,7 @@ echo "[3/4] Configuring and compiling packages in parallel..."
 for pkg in "${PACKAGES[@]}"; do
     echo "CONFIG_PACKAGE_$pkg=m" >> .config
 done
-# A default .config is required for per-package compile in the SDK.
+# Expand the minimal package selection into a full .config.
 make defconfig
 # Compile all in parallel
 make "package/compile" -j"$JOBS" $V_FLAG
